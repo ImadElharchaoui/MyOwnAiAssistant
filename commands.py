@@ -1,9 +1,11 @@
 import webbrowser
 from image_handler import update_image
 import os
+from subprocess import Popen
 import json
 
 
+EpicGamesLauncher = "C:\\Program Files (x86)\\Epic Games\\Launcher\\Portal\\Binaries\\Win32\\EpicGamesLauncher.exe"
 # State variable to track if the bot has been activated
 bot_activated = False
 
@@ -40,11 +42,11 @@ def handle_command(command, label, bring_to_top, bring_to_down):
             with open("Data.json", "r") as file:
                 data = json.load(file)
                 try:
-                    path = data[" ".join(command.split()[1:])]
+                    path = str(data[" ".join(command.split()[1:])]["path"])
                     print("path:", path)
-                    os.open(path)
-                except:
-                    print("Cannot open file:", " ".join(command.split()[1:]))
+                    Popen(path, shell=True)
+                except KeyError:
+                    print("Cannot open file:", " ".join(command.split()[1:]), "error:", KeyError)
                     update_image(label, "idle")
                 
             
