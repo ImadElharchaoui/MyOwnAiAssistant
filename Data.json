@@ -1,7 +1,14 @@
-{   
-    "rocket league":{
-        "name": "rocket league",
-        "path": "F:\\rocketleague\\rocketleague\\Binaries\\Win64\\RocketLeague.exe"
+{
+    "games": {
+        "rocket league": {
+            "name": "rocket league",
+            "path": "F:\\rocketleague\\rocketleague\\Binaries\\Win64\\RocketLeague.exe"
+        }
+    },
+    "folders": {
+        "document": {
+            "name": "document",
+            "path": "C:\\Users\\ULTRAPC\\Documents"
+        }
     }
-
 }

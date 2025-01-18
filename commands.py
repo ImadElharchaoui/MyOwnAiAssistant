@@ -1,5 +1,5 @@
 import webbrowser
-from image_handler import update_image
+from image_handler import update_image, waiting_to_idle
 import os
 from subprocess import Popen
 import json
@@ -21,7 +21,7 @@ def handle_command(command, label, bring_to_top, bring_to_down):
     """
     global bot_activated
 
-    if command.split()[0] == "hello":
+    if command.split()[0] == "johnny":
         print("Command recognized: Bringing window to top.")
         update_image(label, "listening")
         bring_to_top()
@@ -32,27 +32,42 @@ def handle_command(command, label, bring_to_top, bring_to_down):
             update_image(label, "searching")
             search_query = command.split()[1:]
             webbrowser.open(f"https://www.google.com/search?q={' '.join(search_query)}")
+            waiting_to_idle(label)
         elif command.split()[0] == "goodbye":
             print("Command recognized: Minimizing window.")
             update_image(label, "sad")
             bring_to_down()
             bot_activated = False
+            waiting_to_idle(label)
         elif command.split()[0] == "open":
             update_image(label, "happy")
             with open("Data.json", "r") as file:
                 data = json.load(file)
                 try:
-                    path = str(data[" ".join(command.split()[1:])]["path"])
-                    print("path:", path)
-                    Popen(path, shell=True)
-                except KeyError:
-                    print("Cannot open file:", " ".join(command.split()[1:]), "error:", KeyError)
+                    if len(command.split()) >= 2:
+                        entry_type = "games" if "game" == command.split()[1] else "folders"
+                        path = ""
+                        if(entry_type == "games"):
+                            path = str(data[entry_type][" ".join(command.split()[2:])]["path"])
+                            Popen(path, shell=True)
+                        else:
+                            path = str(data[entry_type][" ".join(command.split()[1:])]["path"])
+                            os.startfile(path)
+                            
+                        
+                        print("path:", path)
+                        
+                except KeyError as e:
+                    print("Cannot open file:", " ".join(command.split()[1:]), "error:", e)
                     update_image(label, "idle")
-                
-            
+            waiting_to_idle(label)
+        elif command.split()[0][0:5] == "great":
+            update_image(label, "love")
+            waiting_to_idle(label)
+            pass
         else:
             print("Command not recognized.")
             update_image(label, "idle")
     else:
-        print("Please say 'hello' to activate the bot.")
+        print("Please say 'johnny' to activate the bot.")
         update_image(label, "idle")

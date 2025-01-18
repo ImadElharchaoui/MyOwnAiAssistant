@@ -14,6 +14,8 @@ def bring_to_top():
 def bring_to_down():
     root.minsize()
     root.attributes("-topmost", False)
+    
+    root.after(500,root.withdraw)
 
 
 # Create the Tkinter window
